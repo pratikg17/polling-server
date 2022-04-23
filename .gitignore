@@ -1,0 +1,7 @@
+node_modules
+coverage
+.batect
+.idea
+.vscode
+postgres-data
+.env

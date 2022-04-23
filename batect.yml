@@ -1,0 +1,100 @@
+containers:
+  my-container:
+    image: alpine:3.11.3
+  build-stock-fastify-env:
+    image: node:14.3.0
+    volumes:
+      - local: .
+        container: /code
+        options: cached
+      - type: cache
+        name: node_modules
+        container: /code/node_modules
+    working_directory: /code
+
+  # Postgres sql container
+  db:
+    image: postgres:14
+    ports:
+      - 5432:5432
+    volumes:
+      - local: ./postgres-data
+        container: /var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: app
+      POSTGRES_DB: db
+
+  # Postgres sql container
+  db-test:
+    image: postgres:14
+    ports:
+      - 5431:5432
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: app
+      POSTGRES_DB: db
+
+tasks:
+  start-dev-db:
+    description: start dev. database
+    run:
+      container: db
+  start-test-db:
+    description: start test database
+    run:
+      container: db-test
+
+  say-hello:
+    description: Say hello to the nice person reading the Batect documentation
+    run:
+      container: my-container
+      command: echo 'Hello world!'
+  # Task for install dep fastify app
+  install-dep:
+    description: Install dependency needtobuild fastify application
+    run:
+      container: build-stock-fastify-env
+      command: npm install
+  test-ci:
+    description: Run Test case in CI mode
+    run:
+      container: build-stock-fastify-env
+      environment:
+        PORT: 8080
+        POSTGRES_URI: postgres://app:password@db-test/db
+        JWT_SECRET: supersecretvalue
+      command: npm run test
+    dependencies:
+      - db-test
+  lint:
+    description: Run Lint
+    run:
+      container: build-stock-fastify-env
+      command: npm run lint
+  # Task for running fastify app
+  start-server:
+    description: Run fastify application
+    run:
+      environment:
+        PORT: 8080
+        POSTGRES_URI: postgres://app:password@db/db
+        JWT_SECRET: supersecretvalue
+      container: build-stock-fastify-env
+      command: npm run start
+      ports:
+        - 5000:8080
+    dependencies:
+      - db
+
+  test-watch:
+    description: test running in watch node
+    run:
+      container: build-stock-fastify-env
+      environment:
+        PORT: 8080
+        POSTGRES_URI: postgres://app:password@db-test/db
+        JWT_SECRET: supersecretvalue
+      command: npm run test:watch
+    dependencies:
+      - db-test

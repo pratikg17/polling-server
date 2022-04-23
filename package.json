@@ -1,0 +1,47 @@
+{
+  "name": "project-fastify",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start-prod": "node server.js",
+    "start": "nodemon --legacy-watch server.js",
+    "test:watch": "jest --watchAll --detectOpenHandles --runInBand",
+    "test": "CI=true jest --coverage --detectOpenHandles --runInBand",
+    "lint": "eslint --ext .js src/",
+    "lint:fix": "eslint --ext --fix .js src/",
+    "format": "prettier --write --ext .js src/"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "db-migrate": "^0.11.13",
+    "db-migrate-pg": "^1.2.2",
+    "dotenv": "^16.0.0",
+    "fastify": "^3.27.1",
+    "fastify-cors": "^6.0.2",
+    "fastify-jwt": "^4.1.3",
+    "fastify-plugin": "^3.0.1",
+    "fastify-swagger": "^4.15.0",
+    "moment": "^2.29.1",
+    "nodemon": "^2.0.15",
+    "pg-promise": "^10.11.1",
+    "pino-pretty": "^7.5.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.9.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-jest": "^26.1.1",
+    "eslint-plugin-prettier": "^4.0.0",
+    "jest": "^27.5.1",
+    "prettier": "2.5.1",
+    "tap": "^15.1.6"
+  },
+  "eslintIgnore": [
+    "*.test.js",
+    "*.spec.js"
+  ]
+}
