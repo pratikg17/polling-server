@@ -11,9 +11,9 @@ const {
 const userRoute = async (fastify) => {
   const {
     getUserById,
-    createInvestorUser,
+    createUser,
     getUserByEmailId,
-    getInvestorAuthetication,
+    getUserAuthetication,
     getAdminAuthetication,
   } = UserService(fastify);
 
@@ -48,11 +48,11 @@ const userRoute = async (fastify) => {
     }
   });
 
-  fastify.post('/investor-login', async (request, reply) => {
+  fastify.post('/user-login', async (request, reply) => {
     try {
       const { userName, password } = request.body;
 
-      const user = await getInvestorAuthetication(userName, password);
+      const user = await getUserAuthetication(userName, password);
 
       // create jwt token
       const token = fastify.jwt.sign(user);
@@ -88,7 +88,7 @@ const userRoute = async (fastify) => {
     async (request, reply) => {
       fastify.log.info('creating user');
       try {
-        const userId = await createInvestorUser(request.body);
+        const userId = await createUser(request.body);
         fastify.log.info(`user created with ${userId}`);
         reply.code(201).send({ userId });
       } catch (error) {

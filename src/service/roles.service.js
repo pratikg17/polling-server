@@ -4,9 +4,9 @@ const rolesService = (fastify) => {
   const dao = rolesDao(fastify);
 
   const getAllRoles = () => dao.getAllRoles();
-  const getInvestorRole = () => dao.getInvestorRole();
+  const getUserRole = () => dao.getUserRole();
 
-  return { getInvestorRole, getAllRoles };
+  return { getUserRole, getAllRoles };
 };
 
 module.exports = rolesService;

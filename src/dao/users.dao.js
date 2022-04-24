@@ -50,7 +50,7 @@ const userRepository = (db) => {
   // save user in db
   const saveUser = async (user) => {
     try {
-      const investorRoleId = await roleDao(db).getInvestorRole();
+      const investorRoleId = await roleDao(db).getUserRole();
 
       console.log(createPasswordHash);
       const password = await createPasswordHash(user.password);

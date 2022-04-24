@@ -2,6 +2,9 @@ const postRequestBody = {
   type: 'object',
   required: ['firstName', 'password', 'email', 'userName'],
   properties: {
+    id: {
+      type: 'string',
+    },
     firstName: {
       type: 'string',
     },

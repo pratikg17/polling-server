@@ -54,7 +54,7 @@ const userService = (fastify) => {
     };
   };
 
-  const getInvestorAuthetication = async (userName, password) => {
+  const getUserAuthetication = async (userName, password) => {
     const user = await userRepository.getUserByUsername(userName);
 
     const match = await checkPassword(password, user.password);
@@ -75,16 +75,16 @@ const userService = (fastify) => {
   };
 
   // save user in db and return id
-  const createInvestorUser = async (user) => {
+  const createUser = async (user) => {
     const userId = await userRepository.saveUser(user);
     return userId;
   };
 
   return {
     getUserById,
-    createInvestorUser,
+    createUser,
     getUserByEmailId,
-    getInvestorAuthetication,
+    getUserAuthetication,
     getAdminAuthetication,
   };
 };
