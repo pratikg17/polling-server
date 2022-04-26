@@ -7,5 +7,5 @@ CREATE TABLE poll_options (
  poll_id UUID NOT NULL,
  created_at timestamptz NOT NULL DEFAULT now(),
  updated_at timestamptz NOT NULL DEFAULT now(),
- CONSTRAINT fk_poll_options_polls FOREIGN KEY(poll_id) REFERENCES polls(poll_id)
+ CONSTRAINT fk_poll_options_polls FOREIGN KEY(poll_id) REFERENCES polls(id)
 );
