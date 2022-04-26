@@ -6,11 +6,12 @@ const pollsRepository = (db) => {
     try {
       const { id } = await db.one(
         `INSERT INTO polls(poll_name, poll_desc, user_id, is_featured)
-            values($1,$2, $3, $4) RETURNING id
+            values($1,$2, $3, $4) RETURNING poll_id as id
           `,
         [poll.pollName, poll.pollDesc, poll.userId, poll.isFeatured]
       );
 
+      console.log('poll_id', id);
       return id;
     } catch (error) {
       console.log('error', error);

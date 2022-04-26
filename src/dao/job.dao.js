@@ -6,7 +6,7 @@ const jobRepository = (db) => {
     try {
       const { id } = await db.one(
         `INSERT INTO jobs(title, description, skills, min_budget, max_budget, expired_at, user_id)
-            values($1,$2, $3, $4, $5, $6, $7) RETURNING id
+            values($1,$2, $3, $4, $5, $6, $7) RETURNING poll_id
           `,
         [
           job.title,
