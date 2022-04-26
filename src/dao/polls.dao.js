@@ -6,12 +6,9 @@ const pollsRepository = (db) => {
     try {
       const { id } = await db.one(
         `INSERT INTO polls(poll_name, poll_desc, user_id, is_featured)
-            values($1,$2, $3, $4) RETURNING poll_id as id
-          `,
+            values($1,$2, $3, $4) RETURNING poll_id as id`,
         [poll.pollName, poll.pollDesc, poll.userId, poll.isFeatured]
       );
-
-      console.log('poll_id', id);
       return id;
     } catch (error) {
       console.log('error', error);
@@ -35,7 +32,34 @@ const pollsRepository = (db) => {
     }
   };
 
-  return { save, getAll };
+  const insertPollOptions = async (pollOptions, pollId) => {
+    if (pollOptions.length > 0) {
+      try {
+        const insertValues = pollOptions.map((po) => {
+          let values = `('${pollId}'::uuid, '${po.optionName}', '${po.color}')`;
+          return values;
+        });
+
+        let values = insertValues.join(',');
+        if (insertValues.length < 1) {
+          values = insertValues[0];
+        }
+
+        const query = `INSERT INTO poll_options
+        (poll_id, option_name, color) values  ${insertValues.join(',')}`;
+
+        console.log('query', query);
+        const insertOptions = await db.query(query);
+        return insertOptions;
+      } catch (error) {
+        console.log(error);
+        throw Error('Not valid process orders data - failed to update in db');
+      }
+    } else {
+      return null;
+    }
+  };
+  return { save, getAll, insertPollOptions };
 };
 
 module.exports = pollsRepository;

@@ -2,10 +2,12 @@ const moment = require('moment');
 const PollsRepository = require('../dao/polls.dao');
 
 const pollsService = (fastify) => {
-  const { save, getAll } = PollsRepository(fastify.db);
+  const { save, getAll, insertPollOptions } = PollsRepository(fastify.db);
 
   const createPoll = async (poll) => {
     const pollId = await save(poll);
+    await insertPollOptions(poll.pollOptions, pollId);
+
     return pollId;
   };
 
