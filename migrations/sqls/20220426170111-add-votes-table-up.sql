@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS votes;
 CREATE TABLE votes (
- vote_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+ id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
  poll_option_id UUID NOT NULL,
  poll_id UUID NOT NULL,
  user_id UUID NOT NULL,

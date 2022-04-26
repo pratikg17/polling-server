@@ -5,22 +5,15 @@ const pollsRepository = (db) => {
   const save = async (poll) => {
     try {
       const { id } = await db.one(
-        `INSERT INTO polls(title, description, skills, min_budget, max_budget, expired_at, user_id)
-            values($1,$2, $3, $4, $5, $6, $7) RETURNING id
+        `INSERT INTO polls(poll_name, poll_desc, user_id, is_featured)
+            values($1,$2, $3, $4) RETURNING id
           `,
-        [
-          poll.title,
-          poll.description,
-          poll.skills,
-          poll.minBudget,
-          poll.maxBudget,
-          poll.expiredAt,
-          poll.userId,
-        ]
+        [poll.pollName, poll.pollDesc, poll.userId, poll.isFeatured]
       );
 
       return id;
     } catch (error) {
+      console.log('error', error);
       throw Error('Faild to save in db');
     }
   };

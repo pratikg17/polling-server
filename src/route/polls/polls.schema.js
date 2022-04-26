@@ -14,6 +14,9 @@ const postRequestBody = {
     pollOptions: {
       type: 'array',
     },
+    isFeatured: {
+      type: 'boolean',
+    },
   },
 };
 

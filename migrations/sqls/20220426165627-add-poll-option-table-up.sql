@@ -1,7 +1,7 @@
 /* Replace with your SQL commands */
 DROP TABLE IF EXISTS poll_options;
 CREATE TABLE poll_options (
- poll_option_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+ id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
  option_name TEXT NOT NULL UNIQUE,
  color TEXT NOT NULL UNIQUE,
  poll_id UUID NOT NULL,

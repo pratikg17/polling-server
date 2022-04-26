@@ -4,26 +4,26 @@ const PollsRepository = require('../dao/polls.dao');
 const pollsService = (fastify) => {
   const { save, getAll } = PollsRepository(fastify.db);
 
-  const createPoll = async (job) => {
-    const jobId = await save(job);
-    return jobId;
+  const createPoll = async (poll) => {
+    const pollId = await save(poll);
+    return pollId;
   };
 
   const getPolls = async (limit, offset) => {
-    const jobs = await getAll(limit, offset);
+    const polls = await getAll(limit, offset);
 
-    return jobs.map((job) => ({
-      id: job.id,
-      title: job.title,
-      description: job.description,
-      skills: job.skills,
-      minBudget: job.min_budget,
-      maxBudget: job.max_budget,
-      expiredAt: job.expired_at,
-      userId: job.user_id,
-      createdAt: moment(job.created_at).format('DD/MM/YYYY'),
-      updatedAt: moment(job.updated_at).format('DD/MM/YYYY'),
-      version: job.version,
+    return polls.map((poll) => ({
+      id: poll.id,
+      title: poll.title,
+      description: poll.description,
+      skills: poll.skills,
+      minBudget: poll.min_budget,
+      maxBudget: poll.max_budget,
+      expiredAt: poll.expired_at,
+      userId: poll.user_id,
+      createdAt: moment(poll.created_at).format('DD/MM/YYYY'),
+      updatedAt: moment(poll.updated_at).format('DD/MM/YYYY'),
+      version: poll.version,
     }));
   };
 

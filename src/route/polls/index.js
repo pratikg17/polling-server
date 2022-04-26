@@ -32,9 +32,9 @@ const pollsRoute = async (fastify) => {
 
       const poll = request.body;
       console.log('poll', poll);
-      // const pollId = await createPoll(poll);
-
-      reply.code(201).send({ poll });
+      const pollId = await createPoll(poll);
+      console.log(pollId);
+      reply.code(201).send({ pollId });
       // reply.code(201).send({ pollId });
     }
   );
