@@ -8,6 +8,7 @@ const pollsService = (fastify) => {
     insertPollOptionsDao,
     updatePollDao,
     updatePollOptionsDao,
+    getAllUserPollsDao,
   } = PollsRepository(fastify.db);
 
   const createPoll = async (poll) => {
@@ -67,7 +68,39 @@ const pollsService = (fastify) => {
     return formattedData;
   };
 
-  return { createPoll, getPolls, updatePoll };
+  const getAllUserPolls = async (userId) => {
+    const polls = await getAllUserPollsDao(userId);
+    let pollsData = {};
+    polls.forEach((poll) => {
+      if (!pollsData[poll.poll_id]) {
+        pollsData[poll.poll_id] = {
+          pollName: poll.poll_name,
+          pollDesc: poll.poll_desc,
+          userId: poll.user_id,
+          isFeatured: poll.is_featured,
+          pollOptions: [],
+        };
+        pollsData[poll.poll_id].pollOptions.push({
+          pollOptionId: poll.poll_option_id,
+          optionName: poll.option_name,
+          color: poll.color,
+          pollId: poll.poll_id,
+        });
+      } else {
+        pollsData[poll.poll_id].pollOptions.push({
+          pollOptionId: poll.poll_option_id,
+          optionName: poll.option_name,
+          color: poll.color,
+          pollId: poll.poll_id,
+        });
+      }
+    });
+
+    let formattedData = Object.values(pollsData);
+    return formattedData;
+  };
+
+  return { createPoll, getPolls, updatePoll, getAllUserPolls };
 };
 
 module.exports = pollsService;
