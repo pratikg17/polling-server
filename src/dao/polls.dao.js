@@ -66,6 +66,21 @@ const pollsRepository = (db) => {
       throw Error('failed to fetch poll records from db');
     }
   };
+  const getPollByIdDao = async (pollId) => {
+    try {
+      const polls = await db.query(
+        `select * from polls p 
+        join poll_options po on po.poll_id = p.poll_id 
+        where p.poll_id =$1`,
+        [pollId]
+      );
+
+      return polls;
+    } catch (error) {
+      console.log(error);
+      throw Error('failed to fetch poll records from db');
+    }
+  };
 
   const insertPollOptionsDao = async (pollOptions, pollId) => {
     if (pollOptions.length > 0) {
@@ -127,6 +142,7 @@ const pollsRepository = (db) => {
     updatePollOptionsDao,
     updatePollDao,
     getAllUserPollsDao,
+    getPollByIdDao,
   };
 };
 

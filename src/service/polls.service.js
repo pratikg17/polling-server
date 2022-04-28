@@ -9,6 +9,7 @@ const pollsService = (fastify) => {
     updatePollDao,
     updatePollOptionsDao,
     getAllUserPollsDao,
+    getPollByIdDao,
   } = PollsRepository(fastify.db);
 
   const createPoll = async (poll) => {
@@ -38,69 +39,53 @@ const pollsService = (fastify) => {
 
   const getPolls = async () => {
     const polls = await getAllDao();
-    let pollsData = {};
-    polls.forEach((poll) => {
-      if (!pollsData[poll.poll_id]) {
-        pollsData[poll.poll_id] = {
-          pollName: poll.poll_name,
-          pollDesc: poll.poll_desc,
-          userId: poll.user_id,
-          isFeatured: poll.is_featured,
-          pollOptions: [],
-        };
-        pollsData[poll.poll_id].pollOptions.push({
-          pollOptionId: poll.poll_option_id,
-          optionName: poll.option_name,
-          color: poll.color,
-          pollId: poll.poll_id,
-        });
-      } else {
-        pollsData[poll.poll_id].pollOptions.push({
-          pollOptionId: poll.poll_option_id,
-          optionName: poll.option_name,
-          color: poll.color,
-          pollId: poll.poll_id,
-        });
-      }
-    });
+    return formatPolls(polls);
+  };
 
-    let formattedData = Object.values(pollsData);
-    return formattedData;
+  const getPollById = async (pollId) => {
+    const polls = await getPollByIdDao(pollId);
+    return formatPolls(polls);
   };
 
   const getAllUserPolls = async (userId) => {
     const polls = await getAllUserPollsDao(userId);
-    let pollsData = {};
-    polls.forEach((poll) => {
-      if (!pollsData[poll.poll_id]) {
-        pollsData[poll.poll_id] = {
-          pollName: poll.poll_name,
-          pollDesc: poll.poll_desc,
-          userId: poll.user_id,
-          isFeatured: poll.is_featured,
-          pollOptions: [],
-        };
-        pollsData[poll.poll_id].pollOptions.push({
-          pollOptionId: poll.poll_option_id,
-          optionName: poll.option_name,
-          color: poll.color,
-          pollId: poll.poll_id,
-        });
-      } else {
-        pollsData[poll.poll_id].pollOptions.push({
-          pollOptionId: poll.poll_option_id,
-          optionName: poll.option_name,
-          color: poll.color,
-          pollId: poll.poll_id,
-        });
-      }
-    });
-
-    let formattedData = Object.values(pollsData);
-    return formattedData;
+    return formatPolls(polls);
   };
 
-  return { createPoll, getPolls, updatePoll, getAllUserPolls };
+  return { createPoll, getPolls, updatePoll, getAllUserPolls, getPollById };
+};
+
+const formatPolls = (polls) => {
+  let pollsData = {};
+  polls.forEach((poll) => {
+    if (!pollsData[poll.poll_id]) {
+      pollsData[poll.poll_id] = {
+        pollId: poll.poll_id,
+        pollName: poll.poll_name,
+        pollDesc: poll.poll_desc,
+        userId: poll.user_id,
+        isFeatured: poll.is_featured,
+        pollOptions: [],
+      };
+
+      pollsData[poll.poll_id].pollOptions.push({
+        pollOptionId: poll.poll_option_id,
+        optionName: poll.option_name,
+        color: poll.color,
+        pollId: poll.poll_id,
+      });
+    } else {
+      pollsData[poll.poll_id].pollOptions.push({
+        pollOptionId: poll.poll_option_id,
+        optionName: poll.option_name,
+        color: poll.color,
+        pollId: poll.poll_id,
+      });
+    }
+  });
+
+  let formattedData = Object.values(pollsData);
+  return formattedData;
 };
 
 module.exports = pollsService;

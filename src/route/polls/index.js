@@ -8,15 +8,20 @@ const {
 
 // mark this function as async - required
 const pollsRoute = async (fastify) => {
-  const { createPoll, getPolls, updatePoll, getAllUserPolls } =
+  const { createPoll, getPolls, updatePoll, getAllUserPolls, getPollById } =
     PollsService(fastify);
 
   fastify.get('/', async (request, reply) => {
+    const polls = await getPolls();
+    reply.code(200).send({ polls });
+  });
+
+  fastify.get('/poll-by-id', async (request, reply) => {
     // authenticate request
     // append user request.user
-    // await fastify.authenticate(request, reply);
-
-    const polls = await getPolls();
+    await fastify.authenticate(request, reply);
+    const { poll_id } = request.query;
+    const polls = await getPollById(poll_id);
     reply.code(200).send({ polls });
   });
 
