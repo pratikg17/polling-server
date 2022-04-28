@@ -1,10 +1,14 @@
 const moment = require('moment');
 const PollsService = require('../../service/polls.service');
-const { postRequestBody, queryParameter } = require('./polls.schema');
+const {
+  postRequestBody,
+  queryParameter,
+  updateRequestBody,
+} = require('./polls.schema');
 
 // mark this function as async - required
 const pollsRoute = async (fastify) => {
-  const { createPoll, getPolls } = PollsService(fastify);
+  const { createPoll, getPolls, updatePoll } = PollsService(fastify);
 
   fastify.get(
     '/',
@@ -33,6 +37,22 @@ const pollsRoute = async (fastify) => {
       const poll = request.body;
       console.log('poll', poll);
       const pollId = await createPoll(poll);
+      reply.code(201).send({ pollId });
+    }
+  );
+
+  fastify.post(
+    '/update-poll',
+    {
+      schema: { body: updateRequestBody },
+    },
+    async (request, reply) => {
+      // authenticate request
+      await fastify.authenticate(request, reply);
+
+      const poll = request.body;
+      console.log('poll', poll);
+      const pollId = await updatePoll(poll);
 
       reply.code(201).send({ pollId });
       // reply.code(201).send({ pollId });

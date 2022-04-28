@@ -2,11 +2,35 @@ const moment = require('moment');
 const PollsRepository = require('../dao/polls.dao');
 
 const pollsService = (fastify) => {
-  const { save, getAll, insertPollOptions } = PollsRepository(fastify.db);
+  const {
+    save,
+    getAllDao,
+    insertPollOptionsDao,
+    updatePollDao,
+    updatePollOptionsDao,
+  } = PollsRepository(fastify.db);
 
   const createPoll = async (poll) => {
     const pollId = await save(poll);
-    await insertPollOptions(poll.pollOptions, pollId);
+    await insertPollOptionsDao(poll.pollOptions, pollId);
+    return pollId;
+  };
+
+  const updatePoll = async (poll) => {
+    const pollId = await updatePollDao(poll);
+
+    let updateValues = [];
+    let insertValues = [];
+
+    poll.pollOptions.forEach((po) => {
+      if (po.pollOptionId) {
+        updateValues.push(po);
+      } else {
+        insertValues.push(po);
+      }
+    });
+    await insertPollOptionsDao(insertValues, poll.pollId);
+    await updatePollOptionsDao(updateValues, poll.pollId);
 
     return pollId;
   };
@@ -29,7 +53,7 @@ const pollsService = (fastify) => {
     }));
   };
 
-  return { createPoll, getPolls };
+  return { createPoll, getPolls, updatePoll };
 };
 
 module.exports = pollsService;

@@ -16,6 +16,22 @@ const pollsRepository = (db) => {
     }
   };
 
+  const updatePollDao = async (poll) => {
+    try {
+      //  Yearly High / Low , Daily High / Low and current price will be the same
+      const pollUpdated = await db.one(
+        `UPDATE polls
+        SET poll_name= $1, poll_desc=$2, is_featured=$3
+        WHERE poll_id =$4 RETURNING *`,
+        [poll.pollName, poll.pollDesc, poll.isFeatured, poll.pollId]
+      );
+      return pollUpdated;
+    } catch (error) {
+      console.log(error);
+      throw Error('Not valid poll data - failed to save in db');
+    }
+  };
+
   const getAll = async (limit, offset) => {
     try {
       const currentDate = moment().format('YYYY-MM-DD');
@@ -32,7 +48,7 @@ const pollsRepository = (db) => {
     }
   };
 
-  const insertPollOptions = async (pollOptions, pollId) => {
+  const insertPollOptionsDao = async (pollOptions, pollId) => {
     if (pollOptions.length > 0) {
       try {
         const insertValues = pollOptions.map((po) => {
@@ -59,7 +75,39 @@ const pollsRepository = (db) => {
       return null;
     }
   };
-  return { save, getAll, insertPollOptions };
+
+  const updatePollOptionsDao = async (pollOptions, pollId) => {
+    try {
+      const updateValues = pollOptions.map((po) => {
+        let values = `('${po.pollOptionId}'::uuid, '${po.optionName}', '${po.color}')`;
+        return values;
+      });
+      const query = `update poll_options
+      set
+      option_name = tmp.option_name,
+        color = tmp.color 
+      from ( values  ${updateValues.join(',')}) 
+      as tmp (poll_option_id , option_name, color)
+      where
+      poll_options.poll_option_id = tmp.poll_option_id;`;
+
+      console.log(query);
+
+      const pollOptionsUpdated = await db.query(query);
+      return pollOptionsUpdated;
+    } catch (error) {
+      console.log(error);
+      throw Error('Not valid stock data - failed to update in db');
+    }
+  };
+
+  return {
+    save,
+    getAll,
+    insertPollOptionsDao,
+    updatePollOptionsDao,
+    updatePollDao,
+  };
 };
 
 module.exports = pollsRepository;
