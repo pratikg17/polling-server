@@ -35,22 +35,36 @@ const pollsService = (fastify) => {
     return pollId;
   };
 
-  const getPolls = async (limit, offset) => {
-    const polls = await getAll(limit, offset);
+  const getPolls = async () => {
+    const polls = await getAllDao();
+    let pollsData = {};
+    polls.forEach((poll) => {
+      if (!pollsData[poll.poll_id]) {
+        pollsData[poll.poll_id] = {
+          pollName: poll.poll_name,
+          pollDesc: poll.poll_desc,
+          userId: poll.user_id,
+          isFeatured: poll.is_featured,
+          pollOptions: [],
+        };
+        pollsData[poll.poll_id].pollOptions.push({
+          pollOptionId: poll.poll_option_id,
+          optionName: poll.option_name,
+          color: poll.color,
+          pollId: poll.poll_id,
+        });
+      } else {
+        pollsData[poll.poll_id].pollOptions.push({
+          pollOptionId: poll.poll_option_id,
+          optionName: poll.option_name,
+          color: poll.color,
+          pollId: poll.poll_id,
+        });
+      }
+    });
 
-    return polls.map((poll) => ({
-      id: poll.id,
-      title: poll.title,
-      description: poll.description,
-      skills: poll.skills,
-      minBudget: poll.min_budget,
-      maxBudget: poll.max_budget,
-      expiredAt: poll.expired_at,
-      userId: poll.user_id,
-      createdAt: moment(poll.created_at).format('DD/MM/YYYY'),
-      updatedAt: moment(poll.updated_at).format('DD/MM/YYYY'),
-      version: poll.version,
-    }));
+    let formattedData = Object.values(pollsData);
+    return formattedData;
   };
 
   return { createPoll, getPolls, updatePoll };

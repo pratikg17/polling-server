@@ -10,20 +10,14 @@ const {
 const pollsRoute = async (fastify) => {
   const { createPoll, getPolls, updatePoll } = PollsService(fastify);
 
-  fastify.get(
-    '/',
-    { schema: { querystring: queryParameter } },
-    async (request, reply) => {
-      // authenticate request
-      // append user request.user
-      await fastify.authenticate(request, reply);
+  fastify.get('/', async (request, reply) => {
+    // authenticate request
+    // append user request.user
+    // await fastify.authenticate(request, reply);
 
-      const { limit, offset } = request.query;
-
-      const polls = await getPolls(limit, offset);
-      reply.code(200).send({ polls });
-    }
-  );
+    const polls = await getPolls();
+    reply.code(200).send({ polls });
+  });
 
   fastify.post(
     '/',

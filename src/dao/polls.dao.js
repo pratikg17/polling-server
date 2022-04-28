@@ -32,14 +32,13 @@ const pollsRepository = (db) => {
     }
   };
 
-  const getAll = async (limit, offset) => {
+  const getAllDao = async () => {
     try {
-      const currentDate = moment().format('YYYY-MM-DD');
       const polls = await db.query(
-        `
-            select * from polls where expired_at >= $1 order by created_at limit $2 offset $3
-          `,
-        [currentDate, limit, offset]
+        `select * from polls p 
+        join poll_options po on po.poll_id = p.poll_id 
+        order by 
+        p.is_featured DESC,  p.created_at`
       );
 
       return polls;
@@ -103,7 +102,7 @@ const pollsRepository = (db) => {
 
   return {
     save,
-    getAll,
+    getAllDao,
     insertPollOptionsDao,
     updatePollOptionsDao,
     updatePollDao,
