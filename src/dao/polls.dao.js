@@ -73,8 +73,8 @@ const pollsRepository = (db) => {
       const data = await db.query(
         `select 
           p.poll_id as "pollId",
-          p.poll_desc as "pollName",
-          p.poll_name as "pollDesc",
+          p.poll_name as "pollName",
+          p.poll_desc as "pollDesc",
           p.is_featured as "isFeatured",
           p.created_at as "createdAt",
           p.updated_at as "updatedAt"
@@ -82,12 +82,12 @@ const pollsRepository = (db) => {
             (
               select array_to_json(array_agg(b))
               from (
-                select po.poll_id as "pollId", po.poll_option_id as "pollOptionId" , po.color, count(v.vote_id)  
+                select po.poll_id as "pollId", po.poll_option_id as "pollOptionId" , po.color, po.option_name as "optionName",  count(v.vote_id)  
                 from votes v
                 full outer join poll_options po 
                 on po.poll_option_id  = v.poll_option_id 
                  where po.poll_id = p.poll_id 
-                group by po.poll_id, po.poll_option_id ,po.color 
+                group by po.poll_id, po.poll_option_id ,po.color, po.option_name 
                
               ) b
             ) as votes
@@ -100,6 +100,43 @@ const pollsRepository = (db) => {
       throw Error('failed to fetch poll result records from db');
     }
   };
+
+  const getAllPollResultByIdDao = async (pollId) => {
+    try {
+      const data = await db.query(
+        `select 
+          p.poll_id as "pollId",
+          p.poll_name as "pollName",
+          p.poll_desc as "pollDesc",
+          p.is_featured as "isFeatured",
+          p.created_at as "createdAt",
+          p.updated_at as "updatedAt"
+        ,
+            (
+              select array_to_json(array_agg(b))
+              from (
+                select po.poll_id as "pollId", po.poll_option_id as "pollOptionId" , po.color, po.option_name as "optionName",  count(v.vote_id)  
+                from votes v
+                full outer join poll_options po 
+                on po.poll_option_id  = v.poll_option_id 
+                 where po.poll_id = p.poll_id 
+                group by po.poll_id, po.poll_option_id ,po.color, po.option_name 
+               
+              ) b
+            ) as votes
+          from polls p
+          where poll_id=$1
+          `,
+        [pollId]
+      );
+
+      return data;
+    } catch (error) {
+      console.log(error);
+      throw Error('failed to fetch poll result records from db');
+    }
+  };
+
   const getPollByIdDao = async (pollId) => {
     try {
       const polls = await db.query(
@@ -180,6 +217,7 @@ const pollsRepository = (db) => {
     getAllUserPollsDao,
     getPollByIdDao,
     getAllPollResultsDao,
+    getAllPollResultByIdDao,
   };
 };
 

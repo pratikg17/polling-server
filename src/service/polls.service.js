@@ -11,6 +11,7 @@ const pollsService = (fastify) => {
     getAllUserPollsDao,
     getPollByIdDao,
     getAllPollResultsDao,
+    getAllPollResultByIdDao,
   } = PollsRepository(fastify.db);
 
   const createPoll = async (poll) => {
@@ -58,6 +59,11 @@ const pollsService = (fastify) => {
     return results;
   };
 
+  const getPollResultById = async (pollId) => {
+    const results = await getAllPollResultByIdDao(pollId);
+    return results;
+  };
+
   return {
     createPoll,
     getPolls,
@@ -65,6 +71,7 @@ const pollsService = (fastify) => {
     getAllUserPolls,
     getPollById,
     getAllPollResults,
+    getPollResultById,
   };
 };
 

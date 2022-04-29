@@ -15,6 +15,7 @@ const pollsRoute = async (fastify) => {
     getAllUserPolls,
     getPollById,
     getAllPollResults,
+    getPollResultById,
   } = PollsService(fastify);
 
   fastify.get('/', async (request, reply) => {
@@ -78,6 +79,15 @@ const pollsRoute = async (fastify) => {
     // authenticate request
     const results = await getAllPollResults();
     reply.code(201).send({ results });
+  });
+
+  fastify.get('/poll-result-by-id', async (request, reply) => {
+    // authenticate request
+    // append user request.user
+    await fastify.authenticate(request, reply);
+    const { poll_id } = request.query;
+    const polls = await getPollResultById(poll_id);
+    reply.code(200).send({ polls });
   });
 };
 
