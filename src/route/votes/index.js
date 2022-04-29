@@ -3,7 +3,7 @@ const { postRequestBody } = require('./votes.schema');
 
 // mark this function as async - required
 const pollsRoute = async (fastify) => {
-  const { castVote } = VotesService(fastify);
+  const { castVote, getPollResult } = VotesService(fastify);
 
   fastify.post(
     '/cast-vote',

@@ -5,9 +5,11 @@ const votesService = (fastify) => {
   const { castVoteDao, validateVoteDao } = VotesRepository(fastify.db);
 
   const castVote = async (vote) => {
-    const isAlreadyVoted = await validateVote(vote);
+    // const isAlreadyVoted = await validateVote(vote);
+    const isAlreadyVoted = true;
     if (isAlreadyVoted) {
       const voteId = await castVoteDao(vote);
+      // Trigger socket
       return voteId;
     } else {
       throw new Error('Already voted for the poll!');
