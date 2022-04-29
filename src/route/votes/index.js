@@ -14,10 +14,9 @@ const pollsRoute = async (fastify) => {
       // authenticate request
       await fastify.authenticate(request, reply);
 
-      const poll = request.body;
-      console.log('poll', poll);
-      const pollId = await createPoll(poll);
-      reply.code(201).send({ pollId });
+      const vote = request.body;
+      const voteId = await castVote(vote);
+      reply.code(201).send({ voteId });
     }
   );
 };

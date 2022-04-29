@@ -67,7 +67,7 @@ describe('Job Repository', () => {
         expiredAt: futureDate,
         userId: null,
       })
-    ).rejects.toThrow(Error('Faild to save in db'));
+    ).rejects.toThrow(Error('Failed to save in db'));
   });
 
   it('should get job data', async () => {

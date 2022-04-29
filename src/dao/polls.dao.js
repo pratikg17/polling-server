@@ -13,7 +13,7 @@ const pollsRepository = (db) => {
       return id;
     } catch (error) {
       console.log('error', error);
-      throw Error('Faild to save in db');
+      throw Error('Failed to save in db');
     }
   };
 
