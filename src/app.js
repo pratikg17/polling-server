@@ -4,7 +4,6 @@ const db = require('./plugin/database');
 const testRoute = require('./route/tempTestRoute');
 const swaggerPg = require('./plugin/swagger');
 const userRoute = require('./route/users');
-const jobRoute = require('./route/job');
 const pollsRoute = require('./route/polls');
 
 const authenticate = require('./plugin/authenticate');
@@ -23,7 +22,6 @@ const build = (opts = {}) => {
   // register route
   app.register(testRoute, { prefix: 'api/v1/test' });
   app.register(userRoute, { prefix: 'api/v1/users' });
-  app.register(jobRoute, { prefix: 'api/v1/jobs' });
   app.register(pollsRoute, { prefix: 'api/v1/polls' });
 
   app.get('/', async (request, reply) => {

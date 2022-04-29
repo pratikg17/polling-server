@@ -1,4 +1,5 @@
 const moment = require('moment');
+const { randomColor } = require('../plugin/helper/colorHelper');
 
 const pollsRepository = (db) => {
   // save poll in db
@@ -86,7 +87,9 @@ const pollsRepository = (db) => {
     if (pollOptions.length > 0) {
       try {
         const insertValues = pollOptions.map((po) => {
-          let values = `('${pollId}'::uuid, '${po.optionName}', '${po.color}')`;
+          let values = `('${pollId}'::uuid, '${po.optionName}', '${
+            po.color || randomColor()
+          }')`;
           return values;
         });
 
