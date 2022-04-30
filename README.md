@@ -1,5 +1,9 @@
 # **Fastify Server - Polling App**
 
+Deployed on [https://poll-react.herokuapp.com/](https://poll-react.herokuapp.com/)
+
+Github: [Frontend](https://github.com/pratikg17/polling-react-app)
+
 ## Step to run the server
 
 1.  Install Dockers
