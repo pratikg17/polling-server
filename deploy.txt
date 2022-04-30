@@ -53,5 +53,6 @@ Deploy to heroku with github actions - CD
     
     for revoke auth from token:
        heroku authorizations:revoke ID
-  
-   
+
+Permission for batect  
+   git update-index --chmod=+x myfile.sh

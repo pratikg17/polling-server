@@ -16,9 +16,6 @@ jobs:
       - name: Install Fastify Dependencies
         run: ./batect install-dep
 
-      - name: Perform Linting
-        run: ./batect lint
-
   deploy:
     needs: build
     runs-on: 'ubuntu-latest'
