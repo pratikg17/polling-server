@@ -89,6 +89,14 @@ const pollsRoute = async (fastify) => {
     const polls = await getPollResultById(poll_id);
     reply.code(200).send({ polls });
   });
+
+  fastify.get('/get-live-poll-results-by-id', { websocket: true }, (conn) => {
+    conn.socket.on('message', async (message) => {});
+  });
+
+  fastify.get('/get-live-poll-results', { websocket: true }, (conn) => {
+    conn.socket.on('message', async (message) => {});
+  });
 };
 
 module.exports = pollsRoute;

@@ -6,6 +6,7 @@ const swaggerPg = require('./plugin/swagger');
 const userRoute = require('./route/users');
 const pollsRoute = require('./route/polls');
 const votesRoute = require('./route/votes');
+const websocket = require('./plugin/websocket');
 
 const authenticate = require('./plugin/authenticate');
 
@@ -19,6 +20,7 @@ const build = (opts = {}) => {
   app.register(db);
   app.register(swaggerPg);
   app.register(authenticate);
+  app.register(websocket);
 
   // register route
   app.register(testRoute, { prefix: 'api/v1/test' });
