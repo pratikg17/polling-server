@@ -82,7 +82,8 @@ const pollsRepository = (db) => {
             (
               select array_to_json(array_agg(b))
               from (
-                select po.poll_id as "pollId", po.poll_option_id as "pollOptionId" , po.color, po.option_name as "optionName",  count(v.vote_id)  
+                select po.poll_id as "pollId", po.poll_option_id as "pollOptionId" , po.color, po.option_name as "optionName",  count(v.vote_id),
+                (count(v.vote_id) * 100 /   (select nullif(count(vote_id), 0) from votes v2 where v2.poll_id= po.poll_id)) as "percentage"
                 from votes v
                 full outer join poll_options po 
                 on po.poll_option_id  = v.poll_option_id 
@@ -115,7 +116,8 @@ const pollsRepository = (db) => {
             (
               select array_to_json(array_agg(b))
               from (
-                select po.poll_id as "pollId", po.poll_option_id as "pollOptionId" , po.color, po.option_name as "optionName",  count(v.vote_id)  
+                select po.poll_id as "pollId", po.poll_option_id as "pollOptionId" , po.color, po.option_name as "optionName",  count(v.vote_id),
+                (count(v.vote_id) * 100 /   (select nullif(count(vote_id), 0) from votes v2 where v2.poll_id= po.poll_id)) as "percentage"
                 from votes v
                 full outer join poll_options po 
                 on po.poll_option_id  = v.poll_option_id 
