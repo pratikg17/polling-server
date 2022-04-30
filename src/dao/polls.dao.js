@@ -148,6 +148,20 @@ const pollsRepository = (db) => {
     }
   };
 
+  const deletePollByIdDao = async (pollId) => {
+    try {
+      const polls = await db.query(
+        `DELETE FROM public.polls
+        WHERE poll_id=$1`,
+        [pollId]
+      );
+
+      return polls;
+    } catch (error) {
+      throw Error('failed to fetch poll records from db');
+    }
+  };
+
   const insertPollOptionsDao = async (pollOptions, pollId) => {
     if (pollOptions.length > 0) {
       try {
@@ -207,6 +221,7 @@ const pollsRepository = (db) => {
     getPollByIdDao,
     getAllPollResultsDao,
     getAllPollResultByIdDao,
+    deletePollByIdDao,
   };
 };
 

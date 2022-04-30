@@ -16,6 +16,7 @@ const pollsRoute = async (fastify) => {
     getPollById,
     getAllPollResults,
     getPollResultById,
+    deletePollById,
   } = PollsService(fastify);
 
   fastify.get('/', async (request, reply) => {
@@ -87,6 +88,15 @@ const pollsRoute = async (fastify) => {
     await fastify.authenticate(request, reply);
     const { poll_id } = request.query;
     const polls = await getPollResultById(poll_id);
+    reply.code(200).send({ polls });
+  });
+
+  fastify.post('/delete-poll', async (request, reply) => {
+    // authenticate request
+    // append user request.user
+    await fastify.authenticate(request, reply);
+    const poll = request.body;
+    const polls = await deletePollById(poll.pollId);
     reply.code(200).send({ polls });
   });
 

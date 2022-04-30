@@ -12,6 +12,7 @@ const pollsService = (fastify) => {
     getPollByIdDao,
     getAllPollResultsDao,
     getAllPollResultByIdDao,
+    deletePollByIdDao,
   } = PollsRepository(fastify.db);
 
   const createPoll = async (poll) => {
@@ -77,6 +78,12 @@ const pollsService = (fastify) => {
     });
   };
 
+  const deletePollById = async (pollId) => {
+    const pollData = await deletePollByIdDao(pollId);
+    sendPollingUpdates();
+    return pollData;
+  };
+
   return {
     createPoll,
     getPolls,
@@ -85,6 +92,7 @@ const pollsService = (fastify) => {
     getPollById,
     getAllPollResults,
     getPollResultById,
+    deletePollById,
   };
 };
 
