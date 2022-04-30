@@ -35,7 +35,7 @@ const votesRepository = (db) => {
 
   const getUserVoteDao = async (vote) => {
     try {
-      let query = `select vote_id as "voteId", po.poll_option_id as "pollOptionId" , po.option_name as "optionName" , po.color as "color" from votes v
+      let query = `select v.poll_id as "pollId",  vote_id as "voteId", po.poll_option_id as "pollOptionId" , po.option_name as "optionName" , po.color as "color" from votes v
       join poll_options po on po.poll_option_id  = v .poll_option_id 
       where v.poll_id='${vote.pollId}'
       and v.user_id='${vote.userId}'`;
