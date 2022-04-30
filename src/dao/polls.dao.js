@@ -1,4 +1,3 @@
-const moment = require('moment');
 const { randomColor } = require('../plugin/helper/colorHelper');
 
 const pollsRepository = (db) => {
@@ -12,7 +11,6 @@ const pollsRepository = (db) => {
       );
       return id;
     } catch (error) {
-      console.log('error', error);
       throw Error('Failed to save in db');
     }
   };
@@ -28,7 +26,6 @@ const pollsRepository = (db) => {
       );
       return pollUpdated;
     } catch (error) {
-      console.log(error);
       throw Error('Not valid poll data - failed to save in db');
     }
   };
@@ -63,7 +60,6 @@ const pollsRepository = (db) => {
 
       return polls;
     } catch (error) {
-      console.log(error);
       throw Error('failed to fetch poll records from db');
     }
   };
@@ -97,7 +93,6 @@ const pollsRepository = (db) => {
 
       return data;
     } catch (error) {
-      console.log(error);
       throw Error('failed to fetch poll result records from db');
     }
   };
@@ -134,7 +129,6 @@ const pollsRepository = (db) => {
 
       return data;
     } catch (error) {
-      console.log(error);
       throw Error('failed to fetch poll result records from db');
     }
   };
@@ -150,7 +144,6 @@ const pollsRepository = (db) => {
 
       return polls;
     } catch (error) {
-      console.log(error);
       throw Error('failed to fetch poll records from db');
     }
   };
@@ -173,11 +166,9 @@ const pollsRepository = (db) => {
         const query = `INSERT INTO poll_options
         (poll_id, option_name, color) values  ${insertValues.join(',')}`;
 
-        console.log('query', query);
         const insertOptions = await db.query(query);
         return insertOptions;
       } catch (error) {
-        console.log(error);
         throw Error('Not valid process orders data - failed to update in db');
       }
     } else {
@@ -199,13 +190,9 @@ const pollsRepository = (db) => {
       as tmp (poll_option_id , option_name, color)
       where
       poll_options.poll_option_id = tmp.poll_option_id;`;
-
-      console.log(query);
-
       const pollOptionsUpdated = await db.query(query);
       return pollOptionsUpdated;
     } catch (error) {
-      console.log(error);
       throw Error('Not valid stock data - failed to update in db');
     }
   };
