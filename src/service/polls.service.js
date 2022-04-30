@@ -17,6 +17,7 @@ const pollsService = (fastify) => {
   const createPoll = async (poll) => {
     const pollId = await save(poll);
     await insertPollOptionsDao(poll.pollOptions, pollId);
+    sendPollingUpdates();
     return pollId;
   };
 
@@ -35,7 +36,7 @@ const pollsService = (fastify) => {
     });
     await insertPollOptionsDao(insertValues, poll.pollId);
     await updatePollOptionsDao(updateValues, poll.pollId);
-
+    sendPollingUpdates();
     return pollId;
   };
 
@@ -62,6 +63,18 @@ const pollsService = (fastify) => {
   const getPollResultById = async (pollId) => {
     const results = await getAllPollResultByIdDao(pollId);
     return results;
+  };
+
+  const sendPollingUpdates = async () => {
+    const pollsResults = await getAllPollResultsDao();
+    let socketMsg = {
+      polls: pollsResults,
+    };
+    fastify.websocketServer.clients.forEach(function each(client) {
+      if (client.readyState == 1) {
+        client.send(JSON.stringify(socketMsg));
+      }
+    });
   };
 
   return {
