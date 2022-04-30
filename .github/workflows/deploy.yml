@@ -34,9 +34,9 @@ jobs:
       - name: Build docker image and push to heroku registry
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        run: heroku container:push -a fastify-node-server web
+        run: heroku container:push -a poll-fastify-server web
 
       - name: Run docker image on heroku
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        run: heroku container:release -a fastify-node-server web
+        run: heroku container:release -a poll-fastify-server web
