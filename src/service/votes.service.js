@@ -2,7 +2,9 @@ const moment = require('moment');
 const VotesRepository = require('../dao/votes.dao');
 
 const votesService = (fastify) => {
-  const { castVoteDao, validateVoteDao } = VotesRepository(fastify.db);
+  const { castVoteDao, validateVoteDao, getUserVoteDao } = VotesRepository(
+    fastify.db
+  );
 
   const castVote = async (vote) => {
     // const isAlreadyVoted = await validateVote(vote);
@@ -26,7 +28,12 @@ const votesService = (fastify) => {
     }
   };
 
-  return { castVote };
+  const getUserVote = async (vote) => {
+    const voteData = await getUserVoteDao(vote);
+    return voteData;
+  };
+
+  return { castVote, getUserVote };
 };
 
 module.exports = votesService;

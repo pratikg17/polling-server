@@ -2,8 +2,8 @@ const VotesService = require('../../service/votes.service');
 const { postRequestBody } = require('./votes.schema');
 
 // mark this function as async - required
-const pollsRoute = async (fastify) => {
-  const { castVote, getPollResult } = VotesService(fastify);
+const votesRoute = async (fastify) => {
+  const { castVote, getUserVote } = VotesService(fastify);
 
   fastify.post(
     '/cast-vote',
@@ -19,6 +19,15 @@ const pollsRoute = async (fastify) => {
       reply.code(201).send({ voteId });
     }
   );
+
+  fastify.post('/user-vote', async (request, reply) => {
+    // authenticate request
+    // append user request.user
+    await fastify.authenticate(request, reply);
+    const data = request.body;
+    const vote = await getUserVote(data);
+    reply.code(200).send({ vote });
+  });
 };
 
-module.exports = pollsRoute;
+module.exports = votesRoute;
